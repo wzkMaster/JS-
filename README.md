@@ -194,7 +194,7 @@ function myInstanceof(left, right) {
   }
 }
 ```
-`instanceof`判断对象类型是通过查看其原型链实现的，其右值是一个构造函数，这是因为理论上某个类的原型对象是无法在代码中直接获取到的，因此需要用构造函数作为指向原型的入口，instanceof在判断时做的事情就是顺着左边对象的原型链进行查看，如果找到了右侧构造函数所对应的原型，就返回true，否则返回false。
+`instanceof`判断对象类型是通过查看其原型链实现的，其右值是一个构造函数，这是因为理论上某个类的原型对象是无法在代码中直接获取到的，因此需要用构造函数作为指向原型的入口，`instanceof`在判断时做的事情就是顺着左边对象的原型链进行查看，如果找到了右侧构造函数所对应的原型，就返回`true`，否则返回`false`。
 
 ## 继承和多态
 
@@ -275,11 +275,11 @@ const iceTower1 = new IceTower(100, 'ice1');
 iceTower1.fire(); // ice1 fired!
 ```
 
-为了继承Tower上的方法，我们需要将IceTower的prototype设定为一个原型为Tower的原型的实例，当我们调用fire方法时，JS引擎就可以顺着原型链找到Tower.prototype，从而触发fire方法，在这里找到了fire方法并进行调用。
+为了继承`Tower`上的方法，我们需要将`IceTower`的prototype设定为一个原型为`Tower`的原型的实例，当我们调用`fire`方法时，JS引擎就可以顺着原型链找到`Tower.prototype`，从而触发`fire`方法，在这里找到了`fire`方法并进行调用。
 
 ### 属性的继承
 
-上面的例子中我们只实现了方法的继承，并没有实现属性的继承。在IceTower的构造函数中我们又写了一遍distance和name的挂载逻辑，我们可以通过“借用”父类的构造函数来解决这个问题。
+上面的例子中我们只实现了方法的继承，并没有实现属性的继承。在`IceTower`的构造函数中我们又写了一遍`distance`和`name`的挂载逻辑，我们可以通过“借用”父类的构造函数来解决这个问题。
 
 ```js
 function Tower(distance, name) {
@@ -312,7 +312,7 @@ iceTower1.fire(); // ice1 fired!
 
 ### Class关键字
 
-在了解完如何采用非class语法实现继承之后，我们再来看看ES6的class语法，这也是我更加建议大家在日常编码中使用的语法，前面的内容主要是用于了解一些相关的概念。
+在了解完如何采用非`class`语法实现继承之后，我们再来看看ES6的`class`语法，这也是我更加建议大家在日常编码中使用的语法，前面的内容主要是用于了解一些相关的概念。
 
 ```js
 class Tower {
@@ -341,13 +341,13 @@ const iceTower1 = new IceTower(100, 'ice1');
 iceTower1.fire(); // ice1 fired!
 ```
 
-通过控制台我们可以看到，类实例的`constructor`就是类的名称，实例的的方法则挂载在实例的`[[prototype]]`上。在进行继承时，我们通过super关键字调用了父类的构造函数，和我们在寄生组合式继承时借用父类构造函数的逻辑是类似的。但class语法让我们可以把类声明的相关内容集中在一个代码块中，逻辑更加清晰，也方便来自其它语言的使用者快速上手。
+通过控制台我们可以看到，类实例的`constructor`就是类的名称，实例的的方法则挂载在实例的`[[prototype]]`上。在进行继承时，我们通过`super`关键字调用了父类的构造函数，和我们在寄生组合式继承时借用父类构造函数的逻辑是类似的。但`class`语法让我们可以把类声明的相关内容集中在一个代码块中，逻辑更加清晰，也方便来自其它语言的使用者快速上手。
 
 ## 对象元编程
 
 ### 属性枚举
 
-在JS中我们可以利用for/in来枚举对象的属性，这种枚举默认是会将对象原型链上的所有emurable(可枚举)属性也枚举出来，但这通常是不符合预期的。我们可以利用hasOwnProperty这个方法来判断某个属性是属于对象本身还是来自其原型链。
+在JS中我们可以利用`for/in`来枚举对象的属性，这种枚举默认是会将对象原型链上的所有`emurable`(可枚举)属性也枚举出来，但这通常是不符合预期的。我们可以利用`hasOwnProperty`这个方法来判断某个属性是属于对象本身还是来自其原型链。
 
 ```js
 for (let key in obj) {
@@ -358,11 +358,11 @@ for (let key in obj) {
 }
 ```
 
-另外一种更方便的方法是利用Object.keys()，这个方法会返回对象所有可枚举的自有属性(ownProperty，也就是不在原型链上的)数组。
+另外一种更方便的方法是利用`Object.keys()`，这个方法会返回对象所有**可枚举的自有属性**(ownProperty，也就是不在原型链上的)数组。
 
 ### 属性配置
 
-前面我们讲过所有的对象的原型都是Object.prototype，但当我们枚举一个对象的值时，就算不作过滤也不会枚举出toString, valueOf这些方法，原因在于这些属性的enumerable属性都设置为了false。除了enumerable，每个对象属性都还有configurable, writable两个属性。writable决定了一个属性能否被改变，configurable决定了一个属性能否被删除以及其属性（也就是我们刚刚说的那三个）能否被修改。
+前面我们讲过所有的对象的原型都是`Object.prototype`，但当我们枚举一个对象的值时，就算不作过滤也不会枚举出`toString`, `valueOf`这些方法，原因在于这些属性的`enumerable`属性都设置为了`false`。除了`enumerable`，每个对象属性都还有`configurable`, `writable`两个属性。`writable`决定了一个属性能否被改变，`configurable`决定了一个属性能否被删除以及其属性（也就是我们刚刚说的那三个）能否被修改。
 
 通过getOwnPropertyDescriptor和defineProperty我们可以实现属性配置的查看和修改。
 
@@ -394,9 +394,9 @@ obj.x; // 1，x仍然存在
 
 - `Object.preventExtensions`：限制对象不能再添加新的属性
 
-- `Object.seal`：在前者的基础上，将所有属性的configurable设为false，也就是不能删除
+- `Object.seal`：在前者的基础上，将所有属性的`configurable`设为`false`，也就是不能删除
 
-- `Object.freeze`：在前者的基础上，将所有属性的writable设为false，也就是不能修改任何属性
+- `Object.freeze`：在前者的基础上，将所有属性的`writable`设为`false`，也就是不能修改任何属性
 
 除了上述的特性之外，ES6中又引入了`Symbol`, `Reflect`, `Proxy`等元编程特性，感兴趣的同学可以自行了解一下。
 
